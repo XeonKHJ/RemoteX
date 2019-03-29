@@ -1,0 +1,15 @@
+﻿<Window x:Class="RemoteX.Desktop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RemoteX.Desktop"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <StackPanel>
+            <TextBlock x:Name="TitleBlock" Text="RemoteX" FontSize="40"></TextBlock>
+            <TextBlock x:Name="DescriptionBlock" Text="拿起你的手机控制你的电脑吧！"></TextBlock>
+        </StackPanel>
+    </Grid>
+</Window>
