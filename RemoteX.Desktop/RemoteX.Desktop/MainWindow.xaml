@@ -7,9 +7,17 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <StackPanel>
+        <StackPanel VerticalAlignment="Stretch">
             <TextBlock x:Name="TitleBlock" Text="RemoteX" FontSize="40"></TextBlock>
             <TextBlock x:Name="DescriptionBlock" Text="拿起你的手机控制你的电脑吧！"></TextBlock>
+            <ListView x:Name="DevicesView">
+                <ListView.ItemTemplate>
+                    <DataTemplate DataType="BluetoothLEDeviceModel">
+                        <TextBlock Text="{Binding Path=Name}"></TextBlock>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Button x:Name="ConnectButton" Content="连接" Click="ConnectButton_Click"></Button>
         </StackPanel>
     </Grid>
 </Window>

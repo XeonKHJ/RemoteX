@@ -12,6 +12,15 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Windows.Devices.Bluetooth.GenericAttributeProfile;
+using Windows.Devices.Bluetooth;
+using WindowsInput;
+using Windows.Devices.Enumeration;
+using System.Diagnostics;
+using RemoteX.Desktop.Models;
+using System.Collections.ObjectModel;
+using System.Threading;
+using System.Windows.Threading;
 
 namespace RemoteX.Desktop
 {
@@ -23,6 +32,42 @@ namespace RemoteX.Desktop
         public MainWindow()
         {
             InitializeComponent();
+            DevicesView.ItemsSource = LEDevices;
+            FindDevices();
+        }
+
+        public void FindDevices()
+        {
+            LEDeviceFinder leDeviceFinder = new LEDeviceFinder();
+            leDeviceFinder.StartFinding();
+            leDeviceFinder.Added += LeDeviceFinder_Added;
+        }
+
+        private void LeDeviceFinder_Added(DeviceWatcher sender, DeviceInformation args)
+        {
+            System.Threading.ThreadPool.QueueUserWorkItem(delegate
+            {
+                SynchronizationContext.SetSynchronizationContext(new
+                    DispatcherSynchronizationContext(System.Windows.Application.Current.Dispatcher));
+                SynchronizationContext.Current.Post(pl =>
+                {
+                    if (args.Name != "")
+                    {
+                        LEDevices.Add(new BluetoothLEDeviceModel(args));
+                    }
+                }, null);
+            });
+        }
+
+        ObservableCollection<BluetoothLEDeviceModel> LEDevices = new ObservableCollection<BluetoothLEDeviceModel>();
+
+        KeyboardRemoter keyboardRemoter;
+        private async void ConnectButton_Click(object sender, RoutedEventArgs e)
+        {
+            BluetoothLEDeviceModel LEDevice = DevicesView.SelectedItem as BluetoothLEDeviceModel;
+            BluetoothLEDevice bluetoothLeDevice = await BluetoothLEDevice.FromIdAsync(LEDevice.Id);
+            keyboardRemoter = new KeyboardRemoter(bluetoothLeDevice);
+            keyboardRemoter.GetCharacteristics();
         }
     }
 }
