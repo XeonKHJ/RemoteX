@@ -41,6 +41,20 @@ namespace RemoteX.Desktop
             LEDeviceFinder leDeviceFinder = new LEDeviceFinder();
             leDeviceFinder.StartFinding();
             leDeviceFinder.Added += LeDeviceFinder_Added;
+            leDeviceFinder.Removed += LeDeviceFinder_Removed;
+        }
+
+        private void LeDeviceFinder_Removed(DeviceWatcher sender, DeviceInformationUpdate args)
+        {
+            System.Threading.ThreadPool.QueueUserWorkItem(delegate
+            {
+                SynchronizationContext.SetSynchronizationContext(new
+                    DispatcherSynchronizationContext(System.Windows.Application.Current.Dispatcher));
+                SynchronizationContext.Current.Post(pl =>
+                {
+                    LEDevices.Remove(new BluetoothLEDeviceModel(args.Id));
+                }, null);
+            });
         }
 
         private void LeDeviceFinder_Added(DeviceWatcher sender, DeviceInformation args)

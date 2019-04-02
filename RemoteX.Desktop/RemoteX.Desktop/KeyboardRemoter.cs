@@ -7,6 +7,9 @@ using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using WindowsInput;
 using Windows.Storage.Streams;
+using Windows.Devices;
+using Windows;
+using Windows.Devices.Enumeration;
 
 namespace RemoteX.Desktop
 {
@@ -20,12 +23,33 @@ namespace RemoteX.Desktop
         { }
 
         private GattCharacteristic keyboardControlCharacteristic;
-        public void GetCharacteristics()
+        public async void GetCharacteristics()
         {
-            var service = remoteController.GetGattService(remoteGuid);
-            var characterristics = service.GetCharacteristics(keyboardControlGuid);
-            keyboardControlCharacteristic = characterristics[0];
-            keyboardControlCharacteristic.ValueChanged += KeyboardControlCharacteristic_ValueChanged;
+            BluetoothLEDevice bluetoothLEDevice = await BluetoothLEDevice.FromIdAsync(remoteController.DeviceId);
+            var hidDevices = await DeviceInformation.FindAllAsync(GattDeviceService.GetDeviceSelectorFromUuid(remoteGuid));
+            //System.Diagnostics.Debug.WriteLine(remoteController.ConnectionStatus.ToString());
+            try
+            {
+                var servicesResult = await remoteController.GetGattServicesForUuidAsync(remoteGuid);
+                var service = servicesResult.Services[0];
+                var characterristicsResult = await service.GetCharacteristicsAsync();
+                foreach(var cart in characterristicsResult.Characteristics)
+                {
+                    if(cart.Uuid == keyboardControlGuid)
+                    {
+                        keyboardControlCharacteristic = cart;
+                    }
+                }
+                if(keyboardControlCharacteristic == null)
+                {
+                    throw new Exception("没有键盘特征");
+                }
+                keyboardControlCharacteristic.ValueChanged += KeyboardControlCharacteristic_ValueChanged;
+            }
+            catch(Exception exception)
+            {
+                System.Diagnostics.Debug.WriteLine(exception.Message);
+            }
         }
 
         private void KeyboardControlCharacteristic_ValueChanged(GattCharacteristic sender, GattValueChangedEventArgs args)

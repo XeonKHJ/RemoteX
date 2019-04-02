@@ -13,7 +13,10 @@
             <ListView x:Name="DevicesView">
                 <ListView.ItemTemplate>
                     <DataTemplate DataType="BluetoothLEDeviceModel">
-                        <TextBlock Text="{Binding Path=Name}"></TextBlock>
+                        <StackPanel>
+                            <TextBlock Text="{Binding Path=Name}"></TextBlock>
+                            <TextBlock Text="{Binding Path=Id}"></TextBlock>
+                        </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

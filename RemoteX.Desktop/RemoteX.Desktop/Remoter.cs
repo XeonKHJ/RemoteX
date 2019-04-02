@@ -9,7 +9,7 @@ namespace RemoteX.Desktop
 {
     public class Remoter
     {
-        protected readonly BluetoothLEDevice remoteController;
+        protected BluetoothLEDevice remoteController;
 
         public Remoter(BluetoothLEDevice lEDevice)
         {
