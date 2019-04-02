@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="f715497b-c48d-4585-a307-d930b4b68c3c"
-    Publisher="CN=c4b7070a-e1dd-4bfb-bb16-aceff81a743a"
+    Name="9aa7f411-c109-4387-9672-897580e973fa"
+    Publisher="CN=45db633a-202e-49d6-b3aa-43b783f6dfba"
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="ec0cc741-fd3e-485c-81be-68815c480690" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>RemoteX.Controller.UWP</DisplayName>
-    <PublisherDisplayName>c4b7070a-e1dd-4bfb-bb16-aceff81a743a</PublisherDisplayName>
+    <PublisherDisplayName>45db633a-202e-49d6-b3aa-43b783f6dfba</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 

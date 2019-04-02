@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{EB434045-FED1-44FE-9D52-9B142C6B4FF3}</ProjectGuid>
+    <ProjectGuid>{ECECB25C-BC9C-46E1-B08A-53B69F6E1A05}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RemoteX.Controller.UWP</RootNamespace>
@@ -148,7 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RemoteX.Controller\RemoteX.Controller.csproj">
-      <Project>{85901221-02A8-4237-AFB2-B4C9B02802A7}</Project>
+      <Project>{4E3405C2-C2C5-4FE1-ADD2-6D54FC30DAA0}</Project>
       <Name>RemoteX.Controller</Name>
     </ProjectReference>
   </ItemGroup>
