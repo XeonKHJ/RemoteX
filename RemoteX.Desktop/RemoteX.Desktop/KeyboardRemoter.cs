@@ -23,6 +23,10 @@ namespace RemoteX.Desktop
         { }
 
         private GattCharacteristic keyboardControlCharacteristic;
+
+        /// <summary>
+        /// 获取特性
+        /// </summary>
         public async void GetCharacteristics()
         {
             BluetoothLEDevice bluetoothLEDevice = await BluetoothLEDevice.FromIdAsync(remoteController.DeviceId);
@@ -52,6 +56,11 @@ namespace RemoteX.Desktop
             }
         }
 
+        /// <summary>
+        /// 键盘控制信息改变时发生
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void KeyboardControlCharacteristic_ValueChanged(GattCharacteristic sender, GattValueChangedEventArgs args)
         {
             var reader = DataReader.FromBuffer(args.CharacteristicValue);
