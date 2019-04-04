@@ -26,6 +26,8 @@ namespace RemoteX.Controller
             AdvertisementData advertisementData = new AdvertisementData { LocalName = "RemoteX Controller" };
 
             CrossBleAdapter.Current.Advertiser.Start(advertisementData);
+
+            OnAdvertiseCompleted?.Invoke();
         }
 
         Plugin.BluetoothLE.Server.IGattService controllerService;
@@ -57,7 +59,6 @@ namespace RemoteX.Controller
                 GattPermissions.Read
                 );
 
-
             characteristic.WhenDeviceSubscriptionChanged().Subscribe(e =>
             {
                 ;
@@ -70,6 +71,17 @@ namespace RemoteX.Controller
 
                 x.Status = GattStatus.Success;
             });
+
+
         }
+
+        public Task SendNotification(byte[] data)
+        {
+            Task task = new Task(()=>characteristic.Broadcast(data));
+            return task;
+        }
+
+        public delegate void OnAdvertiseCompletedHandler();
+        public event OnAdvertiseCompletedHandler OnAdvertiseCompleted;
     }
 }

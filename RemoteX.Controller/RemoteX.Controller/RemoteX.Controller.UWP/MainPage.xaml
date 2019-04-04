@@ -10,6 +10,12 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+        <NavigationView x:Name="ControllerNavigator" Header="控制器类型" SelectionChanged="NavigationView_SelectionChanged">
+            <NavigationView.MenuItems>
+                <NavigationViewItem x:Name="MediaControlButton" Content="媒体控制" Icon="Play"></NavigationViewItem>
+                <NavigationViewItem x:Name="KeyboardControlButton" Content="键盘控制" Icon="Keyboard"></NavigationViewItem>
+            </NavigationView.MenuItems>
+            <Frame x:Name="contentFrame"/>
+        </NavigationView>
     </Grid>
 </forms:WindowsPage>

@@ -12,8 +12,6 @@ namespace RemoteX.Controller
         public MainPage()
         {
             InitializeComponent();
-            RemoteGattService remoteGattService = new RemoteGattService();
-            remoteGattService.PublishService();
         }
     }
 }

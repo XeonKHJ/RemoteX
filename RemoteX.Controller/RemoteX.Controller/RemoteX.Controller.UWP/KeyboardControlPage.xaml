@@ -1,0 +1,32 @@
+﻿<Page
+    x:Class="RemoteX.Controller.UWP.KeyboardControlPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:RemoteX.Controller.UWP"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Margin="10" Orientation="Horizontal" Grid.Row="0">
+            <Button Height="50" Width="80" Content="Tab" FontSize="30" BorderThickness="1" BorderBrush="Black" Click="Key_Click" Margin="0, 0, 20, 0"></Button>
+            <Button Height="50" Width="50" Content="Q" FontSize="30" BorderThickness="1" BorderBrush="Black" Click="Key_Click" Margin="5, 0"></Button>
+            <Button Height="50" Width="50" Content="W" FontSize="30" BorderThickness="1" BorderBrush="Black" Click="Key_Click" Margin="5, 0"></Button>
+            <Button Height="50" Width="50" Content="E" FontSize="30" BorderThickness="1" BorderBrush="Black" Click="Key_Click" Margin="5, 0"></Button>
+            <Button Height="50" Width="50" Content="R" FontSize="30" BorderThickness="1" BorderBrush="Black" Click="Key_Click" Margin="5, 0"></Button>
+            <Button Height="50" Width="50" Content="T" FontSize="30" BorderThickness="1" BorderBrush="Black" Click="Key_Click" Margin="5, 0"></Button>
+            <Button Height="50" Width="50" Content="Y" FontSize="30" BorderThickness="1" BorderBrush="Black" Click="Key_Click" Margin="5, 0"></Button>
+            <Button Height="50" Width="50" Content="U" FontSize="30" BorderThickness="1" BorderBrush="Black" Click="Key_Click" Margin="5, 0"></Button>
+            <Button Height="50" Width="50" Content="I" FontSize="30" BorderThickness="1" BorderBrush="Black" Click="Key_Click" Margin="5, 0"></Button>
+            <Button Height="50" Width="50" Content="O" FontSize="30" BorderThickness="1" BorderBrush="Black" Click="Key_Click" Margin="5, 0"></Button>
+            <Button Height="50" Width="50" Content="P" FontSize="30" BorderThickness="1" BorderBrush="Black" Click="Key_Click" Margin="5, 0"></Button>
+        </StackPanel>
+    </Grid>
+</Page>

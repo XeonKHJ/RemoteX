@@ -9,6 +9,7 @@
         <Label Text="欢迎使用超级遥控器！" 
            HorizontalOptions="Center"
            VerticalOptions="CenterAndExpand" />
+        <Button x:Name="NotifyButton" Text="通知"></Button>
     </StackLayout>
 
 </ContentPage>

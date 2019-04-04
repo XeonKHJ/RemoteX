@@ -20,6 +20,19 @@ namespace RemoteX.Controller.Droid
             base.OnCreate(savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());
+
+            remoteGattService.OnAdvertiseCompleted += RemoteGattService_OnAdvertiseCompleted;
+            remoteGattService.PublishService();
+        }
+        RemoteGattService remoteGattService;
+        private void RemoteGattService_OnAdvertiseCompleted()
+        {
+            int i = 0;
+            while(true)
+            {
+                byte[] intBytes = BitConverter.GetBytes(i++);
+                remoteGattService.SendNotification(intBytes);
+            }
         }
     }
 }

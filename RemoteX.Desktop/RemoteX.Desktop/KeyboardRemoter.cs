@@ -20,7 +20,9 @@ namespace RemoteX.Desktop
         private static readonly Guid keyboardControlGuid = new Guid("3E628CA1-6357-4452-BD7D-04DA25E3CE8E");
 
         public KeyboardRemoter(BluetoothLEDevice lEDevice) : base(lEDevice)
-        { }
+        {
+
+        }
 
         private GattCharacteristic keyboardControlCharacteristic;
 
@@ -54,6 +56,16 @@ namespace RemoteX.Desktop
             {
                 System.Diagnostics.Debug.WriteLine(exception.Message);
             }
+            GetNotify();
+        }
+
+        private async void GetNotify()
+        {
+            var status = await keyboardControlCharacteristic.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
+            if(status != GattCommunicationStatus.Success)
+            {
+                throw new Exception(status.ToString());
+            }
         }
 
         /// <summary>
@@ -63,9 +75,12 @@ namespace RemoteX.Desktop
         /// <param name="args"></param>
         private void KeyboardControlCharacteristic_ValueChanged(GattCharacteristic sender, GattValueChangedEventArgs args)
         {
-            var reader = DataReader.FromBuffer(args.CharacteristicValue);
-            var value = reader.ReadInt32();
-            System.Diagnostics.Debug.WriteLine(value);
+            using (var reader = DataReader.FromBuffer(args.CharacteristicValue))
+            {
+                InputSimulator inputSimulator = new InputSimulator();
+                KeyboardSimulator keyboardSimulator = new KeyboardSimulator(inputSimulator);
+                keyboardSimulator.KeyPress((WindowsInput.Native.VirtualKeyCode)reader.ReadInt32());
+            }
         }
     }
 }
