@@ -4,12 +4,11 @@
              xmlns:local="clr-namespace:RemoteX.Controller"
              x:Class="RemoteX.Controller.MainPage">
 
-    <StackLayout>
-        <!-- Place new controls here -->
-        <Label Text="欢迎使用超级遥控器！" 
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
-        <Button x:Name="NotifyButton" Text="通知"></Button>
-    </StackLayout>
-
+    <Grid>
+        <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Orientation="Horizontal">
+            <Button x:Name="preButton" Text="上一首" Margin="30" Clicked="PreButton_Clicked"></Button>
+            <Button x:Name="playButton" Text="播放/暂停" HorizontalOptions="Center" VerticalOptions="Center" Clicked="PlayButton_Clicked"></Button>
+            <Button x:Name="nextButton" Text="下一首" Margin="30" Clicked="NextButton_Clicked"></Button>
+        </StackLayout>
+    </Grid>
 </ContentPage>

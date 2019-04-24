@@ -4,6 +4,7 @@ using System.Linq;
 
 using Foundation;
 using UIKit;
+using CoreBluetooth;
 
 namespace RemoteX.Controller.iOS
 {

@@ -49,6 +49,7 @@ namespace RemoteX.Controller.UWP
                 case "I":
                 case "O":
                 case "P":
+                    return;
             }
         }
     }

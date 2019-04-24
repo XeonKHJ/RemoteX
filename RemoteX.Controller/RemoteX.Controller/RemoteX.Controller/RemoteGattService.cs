@@ -28,6 +28,7 @@ namespace RemoteX.Controller
             CrossBleAdapter.Current.Advertiser.Start(advertisementData);
 
             OnAdvertiseCompleted?.Invoke();
+
         }
 
         Plugin.BluetoothLE.Server.IGattService controllerService;
@@ -75,10 +76,10 @@ namespace RemoteX.Controller
 
         }
 
-        public Task SendNotification(byte[] data)
+        IDisposable notifyBroadcast = null;
+        public void SendNotification(byte[] data)
         {
-            Task task = new Task(()=>characteristic.Broadcast(data));
-            return task;
+            Parallel.ForEach(characteristic.SubscribedDevices, device => characteristic.Broadcast(data, device));
         }
 
         public delegate void OnAdvertiseCompletedHandler();

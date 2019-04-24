@@ -51,12 +51,13 @@ namespace RemoteX.Desktop
                     throw new Exception("没有键盘特征");
                 }
                 keyboardControlCharacteristic.ValueChanged += KeyboardControlCharacteristic_ValueChanged;
+                GetNotify();
             }
             catch(Exception exception)
             {
                 System.Diagnostics.Debug.WriteLine(exception.Message);
             }
-            GetNotify();
+            
         }
 
         private async void GetNotify()
@@ -64,7 +65,11 @@ namespace RemoteX.Desktop
             var status = await keyboardControlCharacteristic.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
             if(status != GattCommunicationStatus.Success)
             {
-                throw new Exception(status.ToString());
+                System.Diagnostics.Debug.WriteLine(status.ToString());
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine(status.ToString());
             }
         }
 
@@ -79,7 +84,9 @@ namespace RemoteX.Desktop
             {
                 InputSimulator inputSimulator = new InputSimulator();
                 KeyboardSimulator keyboardSimulator = new KeyboardSimulator(inputSimulator);
-                keyboardSimulator.KeyPress((WindowsInput.Native.VirtualKeyCode)reader.ReadInt32());
+                byte[] bytesData = new byte[4];
+                reader.ReadBytes(bytesData);
+                keyboardSimulator.KeyPress((WindowsInput.Native.VirtualKeyCode)BitConverter.ToInt32(bytesData, 0));
             }
         }
     }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using RemoteX.Common;
 
 namespace RemoteX.Controller
 {
@@ -12,6 +13,26 @@ namespace RemoteX.Controller
         public MainPage()
         {
             InitializeComponent();
+            remoteGattService = new RemoteGattService();
+            remoteGattService.PublishService();
+            
+        }
+        RemoteGattService remoteGattService;
+
+        int i = 1;
+        private void PlayButton_Clicked(object sender, EventArgs e)
+        {
+            remoteGattService.SendNotification(BitConverter.GetBytes((int)VirtualKeyCode.MEDIA_PLAY_PAUSE));
+        }
+
+        private void PreButton_Clicked(object sender, EventArgs e)
+        {
+            remoteGattService.SendNotification(BitConverter.GetBytes((int)VirtualKeyCode.MEDIA_NEXT_TRACK));
+        }
+
+        private void NextButton_Clicked(object sender, EventArgs e)
+        {
+            remoteGattService.SendNotification(BitConverter.GetBytes((int)VirtualKeyCode.MEDIA_PREV_TRACK));
         }
     }
 }
