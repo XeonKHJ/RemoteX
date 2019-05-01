@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RemoteX.Controller.Pages;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -21,21 +22,21 @@ namespace RemoteX.Controller
         {
             InitializeComponent();
 
-            BindingContext = new MasterDetailPage1MasterViewModel();
+            BindingContext = new ControlPageViewModel();
             ListView = MenuItemsListView;
         }
 
-        class MasterDetailPage1MasterViewModel : INotifyPropertyChanged
+        class ControlPageViewModel : INotifyPropertyChanged
         {
             public ObservableCollection<ControllerMenuItem> MenuItems { get; set; }
             
-            public MasterDetailPage1MasterViewModel()
+            public ControlPageViewModel()
             {
                 MenuItems = new ObservableCollection<ControllerMenuItem>(new[]
                 {
                     new ControllerMenuItem { Id = 0, Title = "媒体遥控", TargetType = typeof(MediaControlPage) },
                     new ControllerMenuItem { Id = 1, Title = "演示文稿遥控", TargetType = typeof(SlideControlPage) },
-                    new ControllerMenuItem { Id = 2, Title = "Page 3" },
+                    new ControllerMenuItem { Id = 2, Title = "文件浏览", TargetType = typeof(FileControlPage) },
                     new ControllerMenuItem { Id = 3, Title = "Page 4" },
                     new ControllerMenuItem { Id = 4, Title = "Page 5" },
                 });

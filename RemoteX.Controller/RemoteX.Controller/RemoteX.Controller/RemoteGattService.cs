@@ -24,8 +24,6 @@ namespace RemoteX.Controller
 
             CrossBleAdapter.Current.Advertiser.Start(advertisementData);
 
-            OnAdvertiseCompleted?.Invoke();
-
         }
 
         Plugin.BluetoothLE.Server.IGattService controllerService;
@@ -39,7 +37,7 @@ namespace RemoteX.Controller
             var server = await CrossBleAdapter.Current.CreateGattServer();
             controllerService = server.CreateService(RemoteUuids.RemoteXServiceGuid, true);
             CreateKeyboardOperationCharacteristic();
-
+            CreateFileManageCharacteristic();
             server.AddService(controllerService);
         }
 
@@ -52,7 +50,6 @@ namespace RemoteX.Controller
         private void CreateCharacteristics()
         {
             CreateKeyboardOperationCharacteristic();
-
         }
 
 
@@ -70,7 +67,7 @@ namespace RemoteX.Controller
 
             keyboardOpCharacteristic.WhenDeviceSubscriptionChanged().Subscribe(e =>
             {
-                ;
+                ; //当订阅发生改变时
             });
 
             keyboardOpCharacteristic.WhenReadReceived().Subscribe(x =>
@@ -82,6 +79,9 @@ namespace RemoteX.Controller
             });
         }
 
+        /// <summary>
+        /// 创建鼠标移动特征
+        /// </summary>
         private void CreateMouseMotionCharacteristic()
         {
             keyboardOpCharacteristic = controllerService.AddCharacteristic
@@ -97,19 +97,70 @@ namespace RemoteX.Controller
             
         }
 
+        /// <summary>
+        /// 创建文件管理特征
+        /// </summary>
         private void CreateFileManageCharacteristic()
         {
+            fileManageCharacteristic = controllerService.AddCharacteristic
+                (
+                RemoteUuids.FileManageCharacteristicGuid,
+                CharacteristicProperties.Notify | CharacteristicProperties.Read | CharacteristicProperties.Write,
+                GattPermissions.Read | GattPermissions.Write
+                );
 
+            fileManageCharacteristic.WhenDeviceSubscriptionChanged().Subscribe(e =>
+            {
+                ;
+            });
+
+            fileManageCharacteristic.WhenReadReceived().Subscribe(x =>
+            {
+                var response = 3;
+                x.Value = BitConverter.GetBytes(response);
+
+                x.Status = GattStatus.Success;
+            });
+
+            fileManageCharacteristic.WhenWriteReceived().Subscribe(x =>
+            {
+                List<string> items = new List<string>();
+                int stringBeginIndex = 0;
+                int stringEndIndex = 0;
+                for(int i = 0; i< x.Value.Length; ++i)
+                {
+                    if(x.Value[i] == 0)
+                    {
+                        stringEndIndex = i;
+                        byte[] path = new byte[stringEndIndex - stringBeginIndex];
+                        Array.Copy(x.Value, stringBeginIndex, path, 0, stringEndIndex - stringBeginIndex - 1);
+                        items.Add(Encoding.UTF8.GetString(path));
+                        stringBeginIndex = stringEndIndex + 1;
+                    }
+                }
+                OnFileManageWriteCompleted?.Invoke(items);
+            });
         }
-
+        internal delegate void OnWriteCompleteEventHandler(object arg);
+        internal event OnWriteCompleteEventHandler OnFileManageWriteCompleted;
         private void CreateProgramOperatioCharacteristic()
         {
-
+            
         }
-
+        
+        /// <summary>
+        /// 发送按键控制
+        /// </summary>
+        /// <param name="data"></param>
         public void SendKeyboardControl(byte[] data)
         {
             Parallel.ForEach(keyboardOpCharacteristic.SubscribedDevices, device => keyboardOpCharacteristic.Broadcast(data, device));
+        }
+
+        public void SendDictionaryRequest(string path)
+        {
+            var pathBytes = Encoding.UTF8.GetBytes(path);
+            Parallel.ForEach(keyboardOpCharacteristic.SubscribedDevices, device => fileManageCharacteristic.Broadcast(pathBytes, device));
         }
     }
 }

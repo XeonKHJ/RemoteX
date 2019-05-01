@@ -75,8 +75,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="FileOperationRemoter.cs" />
     <Compile Include="KeyboardRemoter.cs" />
     <Compile Include="Models\BluetoothLEDeviceModel.cs" />
+    <Compile Include="MouseRemoter.cs" />
     <Compile Include="RemoteCommand.cs" />
     <Compile Include="Remoter.cs" />
     <Page Include="MainWindow.xaml">

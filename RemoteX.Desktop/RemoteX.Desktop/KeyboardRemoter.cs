@@ -10,38 +10,31 @@ using Windows.Storage.Streams;
 using Windows.Devices;
 using Windows;
 using Windows.Devices.Enumeration;
+using RemoteX.Common;
 
 namespace RemoteX.Desktop
 {
     public class KeyboardRemoter : Remoter
     {
-        // {6A323314-750D-449E-8BC6-7AC2E4EB84BC}
-        private static readonly Guid remoteGuid = new Guid("AD86E9A5-AB95-4D75-A4BC-2A969F26E028");
-        private static readonly Guid keyboardControlGuid = new Guid("3E628CA1-6357-4452-BD7D-04DA25E3CE8E");
 
-        public KeyboardRemoter(BluetoothLEDevice lEDevice) : base(lEDevice)
-        {
-
-        }
 
         private GattCharacteristic keyboardControlCharacteristic;
+
+        public KeyboardRemoter(GattDeviceService remoteService) : base(remoteService)
+        {
+        }
 
         /// <summary>
         /// 获取特性
         /// </summary>
         public async void GetCharacteristics()
         {
-            BluetoothLEDevice bluetoothLEDevice = await BluetoothLEDevice.FromIdAsync(remoteController.DeviceId);
-            var hidDevices = await DeviceInformation.FindAllAsync(GattDeviceService.GetDeviceSelectorFromUuid(remoteGuid));
-            //System.Diagnostics.Debug.WriteLine(remoteController.ConnectionStatus.ToString());
             try
             {
-                var servicesResult = await remoteController.GetGattServicesForUuidAsync(remoteGuid);
-                var service = servicesResult.Services[0];
-                var characterristicsResult = await service.GetCharacteristicsAsync();
+                var characterristicsResult = await remoteService.GetCharacteristicsAsync();
                 foreach(var cart in characterristicsResult.Characteristics)
                 {
-                    if(cart.Uuid == keyboardControlGuid)
+                    if(cart.Uuid == RemoteUuids.KeyboardOperationCharacteristicGuid)
                     {
                         keyboardControlCharacteristic = cart;
                     }
@@ -57,7 +50,6 @@ namespace RemoteX.Desktop
             {
                 System.Diagnostics.Debug.WriteLine(exception.Message);
             }
-            
         }
 
         private async void GetNotify()

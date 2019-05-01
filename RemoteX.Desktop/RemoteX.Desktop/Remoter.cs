@@ -4,16 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
+using Windows.Devices.Bluetooth.GenericAttributeProfile;
+using Windows.Devices.Enumeration;
+using RemoteX.Common;
 
 namespace RemoteX.Desktop
 {
     public class Remoter
     {
-        protected BluetoothLEDevice remoteController;
+        protected GattDeviceService remoteService;
 
-        public Remoter(BluetoothLEDevice lEDevice)
+        public Remoter(GattDeviceService remoteService)
         {
-            remoteController = lEDevice;
+            this.remoteService = remoteService;
         }
     }
 }

@@ -21,6 +21,7 @@ using RemoteX.Desktop.Models;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Windows.Threading;
+using RemoteX.Common;
 
 namespace RemoteX.Desktop
 {
@@ -44,12 +45,17 @@ namespace RemoteX.Desktop
             leDeviceFinder.Removed += LeDeviceFinder_Removed;
         }
 
+        /// <summary>
+        /// 删除不在范围内的蓝牙设备
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void LeDeviceFinder_Removed(DeviceWatcher sender, DeviceInformationUpdate args)
         {
-            System.Threading.ThreadPool.QueueUserWorkItem(delegate
+            ThreadPool.QueueUserWorkItem(delegate
             {
                 SynchronizationContext.SetSynchronizationContext(new
-                    DispatcherSynchronizationContext(System.Windows.Application.Current.Dispatcher));
+                    DispatcherSynchronizationContext(Application.Current.Dispatcher));
                 SynchronizationContext.Current.Post(pl =>
                 {
                     LEDevices.Remove(new BluetoothLEDeviceModel(args.Id));
@@ -57,9 +63,14 @@ namespace RemoteX.Desktop
             });
         }
 
+        /// <summary>
+        /// 添加在范围内的蓝牙设备
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void LeDeviceFinder_Added(DeviceWatcher sender, DeviceInformation args)
         {
-            System.Threading.ThreadPool.QueueUserWorkItem(delegate
+            ThreadPool.QueueUserWorkItem(delegate
             {
                 SynchronizationContext.SetSynchronizationContext(new
                     DispatcherSynchronizationContext(System.Windows.Application.Current.Dispatcher));
@@ -75,13 +86,26 @@ namespace RemoteX.Desktop
 
         ObservableCollection<BluetoothLEDeviceModel> LEDevices = new ObservableCollection<BluetoothLEDeviceModel>();
 
-        KeyboardRemoter keyboardRemoter;
+        private KeyboardRemoter keyboardRemoter;
+        private FileOperationRemoter fileOperationRemoter;
+        private GattDeviceService remoteService;
         private async void ConnectButton_Click(object sender, RoutedEventArgs e)
         {
             BluetoothLEDeviceModel LEDevice = DevicesView.SelectedItem as BluetoothLEDeviceModel;
             BluetoothLEDevice bluetoothLeDevice = await BluetoothLEDevice.FromIdAsync(LEDevice.Id);
-            keyboardRemoter = new KeyboardRemoter(bluetoothLeDevice);
+            try
+            {
+                var servicesResult = await bluetoothLeDevice.GetGattServicesForUuidAsync(RemoteUuids.RemoteXServiceGuid);
+                remoteService = servicesResult.Services[0];
+            }
+            catch(Exception exception)
+            {
+                Debug.WriteLine(exception.Message);
+            }
+            keyboardRemoter = new KeyboardRemoter(remoteService);
+            fileOperationRemoter = new FileOperationRemoter(remoteService);
             keyboardRemoter.GetCharacteristics();
+            fileOperationRemoter.GetCharacteristics();
         }
     }
 }

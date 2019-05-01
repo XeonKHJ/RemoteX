@@ -34,6 +34,11 @@ namespace RemoteX.Desktop
             deviceWatcher.EnumerationCompleted += DeviceWatcher_EnumerationCompleted;
         }
 
+        public async void ConnectToDevice()
+        {
+
+        }
+
         public void StartFinding()
         {
             deviceWatcher.Start();
