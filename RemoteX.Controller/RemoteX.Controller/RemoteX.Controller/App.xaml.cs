@@ -7,10 +7,13 @@ namespace RemoteX.Controller
 {
     public partial class App : Application
     {
+        static internal RemoteGattService ControllerService;
         public App()
         {
             InitializeComponent();
-            MainPage = new MainPage();
+            ControllerService = new RemoteGattService();
+            ControllerService.PublishService();
+            MainPage = new MainMasterDetailPage();
         }
 
         

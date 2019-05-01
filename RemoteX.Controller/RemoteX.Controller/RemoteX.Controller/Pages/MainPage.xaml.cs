@@ -22,17 +22,17 @@ namespace RemoteX.Controller
         int i = 1;
         private void PlayButton_Clicked(object sender, EventArgs e)
         {
-            remoteGattService.SendNotification(BitConverter.GetBytes((int)VirtualKeyCode.MEDIA_PLAY_PAUSE));
+            remoteGattService.SendKeyboardControl(BitConverter.GetBytes((int)VirtualKeyCode.MEDIA_PLAY_PAUSE));
         }
 
         private void PreButton_Clicked(object sender, EventArgs e)
         {
-            remoteGattService.SendNotification(BitConverter.GetBytes((int)VirtualKeyCode.MEDIA_NEXT_TRACK));
+            remoteGattService.SendKeyboardControl(BitConverter.GetBytes((int)VirtualKeyCode.MEDIA_PREV_TRACK));
         }
 
         private void NextButton_Clicked(object sender, EventArgs e)
         {
-            remoteGattService.SendNotification(BitConverter.GetBytes((int)VirtualKeyCode.MEDIA_PREV_TRACK));
+            remoteGattService.SendKeyboardControl(BitConverter.GetBytes((int)VirtualKeyCode.MEDIA_NEXT_TRACK));
         }
     }
 }

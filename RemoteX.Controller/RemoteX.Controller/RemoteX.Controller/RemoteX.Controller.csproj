@@ -17,4 +17,31 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\RemoteX.Common\RemoteX.Common\RemoteX.Common.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Pages\MainMasterDetailPage.xaml.cs">
+      <DependentUpon>MainMasterDetailPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\MediaControlPage.xaml.cs">
+      <DependentUpon>MediaControlPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\MasterPage.xaml.cs">
+      <DependentUpon>MasterPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="ControllerMenuItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Pages\MainMasterDetailPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\MediaControlPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\MasterPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

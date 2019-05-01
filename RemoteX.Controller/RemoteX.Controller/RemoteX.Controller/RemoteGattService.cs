@@ -5,15 +5,12 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Plugin.BluetoothLE;
 using Plugin.BluetoothLE.Server;
+using RemoteX.Common;
 
 namespace RemoteX.Controller
 {
     public class RemoteGattService
     {
-        
-        private static readonly Guid remoteGuid = new Guid("AD86E9A5-AB95-4D75-A4BC-2A969F26E028");
-        private static readonly Guid keyboardControlGuid = new Guid("3E628CA1-6357-4452-BD7D-04DA25E3CE8E");
-
         public RemoteGattService()
         {
 
@@ -40,47 +37,59 @@ namespace RemoteX.Controller
         private async Task CreateService()
         {
             var server = await CrossBleAdapter.Current.CreateGattServer();
-            controllerService = server.CreateService(remoteGuid, true);
-            CreateCharacteristics();
+            controllerService = server.CreateService(RemoteUuids.RemoteXServiceGuid, true);
+            CreateKeyboardOpeartionCharacteristic();
 
             server.AddService(controllerService);
         }
 
-        private Plugin.BluetoothLE.Server.IGattCharacteristic characteristic;
+        private Plugin.BluetoothLE.Server.IGattCharacteristic keyboardOpCharacteristic;
+        private Plugin.BluetoothLE.Server.IGattCharacteristic mouseMotionCharacteristic;
+        private Plugin.BluetoothLE.Server.IGattCharacteristic mouseEventCharacteristic;
+        private Plugin.BluetoothLE.Server.IGattCharacteristic fileManageCharacteristic;
+        private Plugin.BluetoothLE.Server.IGattCharacteristic programOpCharacteristic;
 
-        /// <summary>
-        /// 创建特征
-        /// </summary>
         private void CreateCharacteristics()
         {
-            characteristic = controllerService.AddCharacteristic
+            CreateKeyboardOpeartionCharacteristic();
+            
+        }
+
+
+        /// <summary>
+        /// 创建键盘操作特征
+        /// </summary>
+        private void CreateKeyboardOpeartionCharacteristic()
+        {
+            keyboardOpCharacteristic = controllerService.AddCharacteristic
                 (
-                keyboardControlGuid,
+                RemoteUuids.KeyboardOpControlGuid,
                 CharacteristicProperties.Notify | CharacteristicProperties.Read,
                 GattPermissions.Read
                 );
 
-            characteristic.WhenDeviceSubscriptionChanged().Subscribe(e =>
+            keyboardOpCharacteristic.WhenDeviceSubscriptionChanged().Subscribe(e =>
             {
                 ;
             });
 
-            characteristic.WhenReadReceived().Subscribe(x =>
+            keyboardOpCharacteristic.WhenReadReceived().Subscribe(x =>
             {
                 var response = 3;
                 x.Value = BitConverter.GetBytes(response);
 
                 x.Status = GattStatus.Success;
             });
-
-
         }
 
         IDisposable notifyBroadcast = null;
-        public void SendNotification(byte[] data)
+        public void SendKeyboardControl(byte[] data)
         {
-            Parallel.ForEach(characteristic.SubscribedDevices, device => characteristic.Broadcast(data, device));
+            Parallel.ForEach(keyboardOpCharacteristic.SubscribedDevices, device => keyboardOpCharacteristic.Broadcast(data, device));
         }
+
+
+
 
         public delegate void OnAdvertiseCompletedHandler();
         public event OnAdvertiseCompletedHandler OnAdvertiseCompleted;

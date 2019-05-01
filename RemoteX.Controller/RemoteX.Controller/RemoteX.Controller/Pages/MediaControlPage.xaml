@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RemoteX.Controller.MediaControlPage"
+             Title="媒体控制">
+    <StackLayout Padding="10" Orientation="Horizontal">
+        <Button x:Name="preButton" Text="上一首" Margin="30" Clicked="PreButton_Clicked"></Button>
+        <Button x:Name="playButton" Text="播放/暂停" HorizontalOptions="Center" VerticalOptions="Center" Clicked="PlayButton_Clicked"></Button>
+        <Button x:Name="nextButton" Text="下一首" Margin="30" Clicked="NextButton_Clicked"></Button>
+    </StackLayout>
+</ContentPage>
