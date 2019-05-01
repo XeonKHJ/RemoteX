@@ -38,7 +38,7 @@ namespace RemoteX.Controller
         {
             var server = await CrossBleAdapter.Current.CreateGattServer();
             controllerService = server.CreateService(RemoteUuids.RemoteXServiceGuid, true);
-            CreateKeyboardOpeartionCharacteristic();
+            CreateKeyboardOperationCharacteristic();
 
             server.AddService(controllerService);
         }
@@ -51,19 +51,19 @@ namespace RemoteX.Controller
 
         private void CreateCharacteristics()
         {
-            CreateKeyboardOpeartionCharacteristic();
-            
+            CreateKeyboardOperationCharacteristic();
+
         }
 
 
         /// <summary>
         /// 创建键盘操作特征
         /// </summary>
-        private void CreateKeyboardOpeartionCharacteristic()
+        private void CreateKeyboardOperationCharacteristic()
         {
             keyboardOpCharacteristic = controllerService.AddCharacteristic
                 (
-                RemoteUuids.KeyboardOpControlGuid,
+                RemoteUuids.KeyboardOperationCharacteristicGuid,
                 CharacteristicProperties.Notify | CharacteristicProperties.Read,
                 GattPermissions.Read
                 );
@@ -82,16 +82,34 @@ namespace RemoteX.Controller
             });
         }
 
-        IDisposable notifyBroadcast = null;
+        private void CreateMouseMotionCharacteristic()
+        {
+            keyboardOpCharacteristic = controllerService.AddCharacteristic
+                (
+                RemoteUuids.MouseMotionCharacteristicGuid,
+                CharacteristicProperties.Notify,
+                GattPermissions.Read
+                );
+        }
+
+        private void CreatemMouseEventCharacteristic()
+        {
+            
+        }
+
+        private void CreateFileManageCharacteristic()
+        {
+
+        }
+
+        private void CreateProgramOperatioCharacteristic()
+        {
+
+        }
+
         public void SendKeyboardControl(byte[] data)
         {
             Parallel.ForEach(keyboardOpCharacteristic.SubscribedDevices, device => keyboardOpCharacteristic.Broadcast(data, device));
         }
-
-
-
-
-        public delegate void OnAdvertiseCompletedHandler();
-        public event OnAdvertiseCompletedHandler OnAdvertiseCompleted;
     }
 }

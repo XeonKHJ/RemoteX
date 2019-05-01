@@ -33,8 +33,8 @@ namespace RemoteX.Controller
             {
                 MenuItems = new ObservableCollection<ControllerMenuItem>(new[]
                 {
-                    new ControllerMenuItem { Id = 0, Title = "媒体遥控" },
-                    new ControllerMenuItem { Id = 1, Title = "演示文稿遥控" },
+                    new ControllerMenuItem { Id = 0, Title = "媒体遥控", TargetType = typeof(MediaControlPage) },
+                    new ControllerMenuItem { Id = 1, Title = "演示文稿遥控", TargetType = typeof(SlideControlPage) },
                     new ControllerMenuItem { Id = 2, Title = "Page 3" },
                     new ControllerMenuItem { Id = 3, Title = "Page 4" },
                     new ControllerMenuItem { Id = 4, Title = "Page 5" },

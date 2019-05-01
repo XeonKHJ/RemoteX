@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RemoteX.Controller.SlideControlPage"
+             Title="幻灯片遥控">
+    <ContentPage.Content>
+        <StackLayout>
+            <Button x:Name="pageUpButton" Text="上一页" Clicked="PageUpButton_Clicked"></Button>
+            <Button x:Name="showSlidesButton" Text="演示" Clicked="ShowSlidesButton_Clicked"></Button>
+            <Button x:Name="pageDownButton" Text="下一页" Clicked="PageDownButton_Clicked"></Button>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
