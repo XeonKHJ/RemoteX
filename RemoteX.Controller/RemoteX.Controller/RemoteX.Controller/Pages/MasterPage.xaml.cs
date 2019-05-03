@@ -25,7 +25,7 @@ namespace RemoteX.Controller
             BindingContext = new ControlPageViewModel();
             ListView = MenuItemsListView;
         }
-
+       
         class ControlPageViewModel : INotifyPropertyChanged
         {
             public ObservableCollection<ControllerMenuItem> MenuItems { get; set; }
@@ -36,7 +36,7 @@ namespace RemoteX.Controller
                 {
                     new ControllerMenuItem { Id = 0, Title = "媒体遥控", TargetType = typeof(MediaControlPage) },
                     new ControllerMenuItem { Id = 1, Title = "演示文稿遥控", TargetType = typeof(SlideControlPage) },
-                    new ControllerMenuItem { Id = 2, Title = "文件浏览", TargetType = typeof(FileControlPage) },
+                    new ControllerMenuItem { Id = 2, Title = "文件浏览", TargetType = typeof(FileControlListPage) },
                     new ControllerMenuItem { Id = 3, Title = "Page 4" },
                     new ControllerMenuItem { Id = 4, Title = "Page 5" },
                 });

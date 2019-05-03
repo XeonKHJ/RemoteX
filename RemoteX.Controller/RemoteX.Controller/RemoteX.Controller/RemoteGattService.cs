@@ -70,9 +70,10 @@ namespace RemoteX.Controller
                 ; //当订阅发生改变时
             });
 
+            int number = 0;
             keyboardOpCharacteristic.WhenReadReceived().Subscribe(x =>
             {
-                var response = 3;
+                var response = ++number;
                 x.Value = BitConverter.GetBytes(response);
 
                 x.Status = GattStatus.Success;
@@ -122,6 +123,7 @@ namespace RemoteX.Controller
                 x.Status = GattStatus.Success;
             });
 
+            //收到目录数据
             fileManageCharacteristic.WhenWriteReceived().Subscribe(x =>
             {
                 List<string> items = new List<string>();
@@ -133,11 +135,12 @@ namespace RemoteX.Controller
                     {
                         stringEndIndex = i;
                         byte[] path = new byte[stringEndIndex - stringBeginIndex];
-                        Array.Copy(x.Value, stringBeginIndex, path, 0, stringEndIndex - stringBeginIndex - 1);
+                        Array.Copy(x.Value, stringBeginIndex, path, 0, stringEndIndex - stringBeginIndex);
                         items.Add(Encoding.UTF8.GetString(path));
                         stringBeginIndex = stringEndIndex + 1;
                     }
                 }
+                System.Diagnostics.Debug.WriteLine("Received inside");
                 OnFileManageWriteCompleted?.Invoke(items);
             });
         }

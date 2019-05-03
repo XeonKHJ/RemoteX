@@ -58,14 +58,23 @@ namespace RemoteX.Desktop
         /// <param name="args"></param>
         private void FileManageRemoter_ValueChanged(GattCharacteristic sender, GattValueChangedEventArgs args)
         {
-            var path = args.CharacteristicValue.ToString();
-            if(IsPathAFile(path))
+            uint length = args.CharacteristicValue.Length;
+            using (var reader = DataReader.FromBuffer(args.CharacteristicValue))
             {
-                System.Diagnostics.Process.Start(path);
-            }
-            else
-            {
-                EnterDictionary(path);
+                byte[] bytesData = new byte[length];
+                reader.ReadBytes(bytesData);
+                var path = Encoding.UTF8.GetString(bytesData);
+                if (IsPathAFile(path))
+                {
+
+                    System.Diagnostics.Process.Start(path);
+                }
+                else
+                {
+
+
+                    EnterDictionary(path);
+                }
             }
         }
 
@@ -85,7 +94,7 @@ namespace RemoteX.Desktop
             }
         }
 
-        private List<string> itemsInTheCurrentFolder;
+        private IEnumerable<string> itemsInTheCurrentFolder;
 
         /// <summary>
         /// 获取磁盘路径
@@ -93,13 +102,18 @@ namespace RemoteX.Desktop
         /// <param name="currentDictionary"></param>
         private List<string> GetDrives()
         {
-            List<string> itemsInTheCurrentFolderToAdd = new List<string>();
+            List<string> driveNames = new List<string>();
             var drives = DriveInfo.GetDrives();
             foreach(var drive in drives)
             {
-                itemsInTheCurrentFolder.Add(drive.Name);
+                char[] drivePath = new char[drive.Name.Length + 1];
+
+                //drive.Name.CopyTo(0, drivePath, 0, drive.Name.Length);
+                //drivePath[drivePath.Length - 1] = '/';
+                //Encoding.UTF8.GetBytes(drivePath);
+                driveNames.Add(drive.Name);
             }
-            return itemsInTheCurrentFolderToAdd;
+            return driveNames;
         }
 
         /// <summary>
@@ -117,13 +131,16 @@ namespace RemoteX.Desktop
             {
                 items = System.IO.Directory.EnumerateFileSystemEntries(dictionary);
             }
-            OnEnteredDicionary?.Invoke();
+            itemsInTheCurrentFolder = items;
+            SendCurrentDictionaryInfomation();
         }
-        private delegate void OnEnteredDictionaryEventHandler();
-        private event OnEnteredDictionaryEventHandler OnEnteredDicionary;
 
         private bool IsPathAFile(string path)
         {
+            if (path == "*")
+            {
+                return false;
+            }
             FileAttributes attr = File.GetAttributes(path);
 
             if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
@@ -142,25 +159,51 @@ namespace RemoteX.Desktop
         private async void SendCurrentDictionaryInfomation()
         {
             var writer = new DataWriter();
-            int byteLength = 0;
             
             foreach(var path in itemsInTheCurrentFolder)
             {
-                byteLength += (path.Length + 1);
+                //准备一条路径
+                char[] pathToSend = path.ToCharArray();
+                if(!IsPathAFile(path))
+                {
+                    if (path.Last() != '\\' && path.Last() != '/')
+                    {
+                        pathToSend = new char[path.Length + 1];
+                        path.CopyTo(0, pathToSend, 0, path.Length);
+                        pathToSend[pathToSend.Length - 1] = '\\';
+                    }
+                }
+                var bytes = Encoding.UTF8.GetBytes(pathToSend);
+                byte[] bytesToSend = new byte[bytes.Length + 1];
+                bytes.CopyTo(bytesToSend, 0);
+                bytesToSend[bytesToSend.Length - 1] = 0;
+                //发送
+                writer.WriteBytes(bytesToSend);
+                try
+                {
+                    var result = await fileManageRemoterCharacteristic.WriteValueAsync(writer.DetachBuffer());
+                }
+                catch (Exception exception)
+                {
+                    System.Diagnostics.Debug.WriteLine(exception.Message);
+                }
             }
 
-            byte[] bytes = new byte[byteLength];
+            string endString = "RemoteFileEnumEnds";
+            var endBytes = Encoding.UTF8.GetBytes(endString.ToCharArray());
+            byte[] endBytesToSend = new byte[endBytes.Length + 1];
+            endBytes.CopyTo(endBytesToSend, 0);
+            endBytesToSend[endBytesToSend.Length - 1] = 0;
 
-            int copyBeginIndex = 0;
-            foreach (var path in itemsInTheCurrentFolder)
+            writer.WriteBytes(Encoding.UTF8.GetBytes(endString));
+            try
             {
-                byte[] bArray = Encoding.UTF8.GetBytes(path);
-                bArray.CopyTo(bytes, copyBeginIndex);
-                copyBeginIndex += bArray.Length;
-                bytes[copyBeginIndex++] = 0;
+                var result = await fileManageRemoterCharacteristic.WriteValueAsync(writer.DetachBuffer());
             }
-            writer.WriteBytes(bytes);
-            var result = await fileManageRemoterCharacteristic.WriteValueAsync(writer.DetachBuffer());
+            catch (Exception exception)
+            {
+                System.Diagnostics.Debug.WriteLine(exception.Message);
+            }
         }
     }
 }

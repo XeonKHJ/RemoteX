@@ -5,16 +5,11 @@
              Title="文件浏览">
     <ContentPage.Content>
         <StackLayout>
-            <ListView ItemsSource="Files">
+            <ListView ItemsSource="{Binding Files}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Padding="15,10" HorizontalOptions="FillAndExpand">
-                                <Label VerticalOptions="FillAndExpand" 
-                                    VerticalTextAlignment="Center" 
-                                    Text="{Binding FileName}" 
-                                    FontSize="20"/>
-                            </StackLayout>
+                            <Label Text="{Binding .}"></Label>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>

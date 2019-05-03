@@ -13,6 +13,7 @@ namespace RemoteX.Controller
             InitializeComponent();
             ControllerService = new RemoteGattService();
             ControllerService.PublishService();
+            App.ControllerService.OnFileManageWriteCompleted += FileControlListPage.ControllerService_OnFileManageWriteCompleted;
             MainPage = new MainMasterDetailPage();
         }
 

@@ -40,9 +40,9 @@ namespace RemoteX.Desktop
         public void FindDevices()
         {
             LEDeviceFinder leDeviceFinder = new LEDeviceFinder();
-            leDeviceFinder.StartFinding();
             leDeviceFinder.Added += LeDeviceFinder_Added;
             leDeviceFinder.Removed += LeDeviceFinder_Removed;
+            leDeviceFinder.StartFinding();
         }
 
         /// <summary>

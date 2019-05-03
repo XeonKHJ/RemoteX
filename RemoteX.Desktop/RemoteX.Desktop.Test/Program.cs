@@ -11,7 +11,7 @@ namespace RemoteX.Desktop.Test
     {
         static void Main(string[] args)
         {
-            var files = System.IO.Directory.EnumerateFileSystemEntries(".");
+            var files = System.IO.Directory.EnumerateFileSystemEntries("D:/");
             
             foreach(var file in files)
             {

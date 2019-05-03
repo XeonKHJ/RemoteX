@@ -19,6 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Pages\FileControlListPage.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Pages\MainMasterDetailPage.xaml.cs">
       <DependentUpon>MainMasterDetailPage.xaml</DependentUpon>
     </Compile>

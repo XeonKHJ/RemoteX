@@ -3,9 +3,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="RemoteX.Controller.MediaControlPage"
              Title="媒体控制">
-    <StackLayout Padding="10" Orientation="Horizontal">
-        <Button x:Name="preButton" Text="上一首" Margin="30" Clicked="PreButton_Clicked"></Button>
-        <Button x:Name="playButton" Text="播放/暂停" HorizontalOptions="Center" VerticalOptions="Center" Clicked="PlayButton_Clicked"></Button>
-        <Button x:Name="nextButton" Text="下一首" Margin="30" Clicked="NextButton_Clicked"></Button>
-    </StackLayout>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Button x:Name="volumnUpButton" Text="音量+" HorizontalOptions="Center" VerticalOptions="Center" Grid.Row="0" Clicked="VolumnUpButton_Clicked"></Button>
+        <StackLayout Padding="10" Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="Center" Grid.Row="1">
+            <Button x:Name="preButton" Text="上一首" Margin="30" Clicked="PreButton_Clicked"></Button>
+            <Button x:Name="playButton" Text="播放/暂停" HorizontalOptions="Center" VerticalOptions="Center" Clicked="PlayButton_Clicked"></Button>
+            <Button x:Name="nextButton" Text="下一首" Margin="30" Clicked="NextButton_Clicked"></Button>
+        </StackLayout>
+        <Button x:Name="volumnDownButton" Text="音量-" HorizontalOptions="Center" VerticalOptions="Center" Grid.Row="2" Clicked="VolumnDownButton_Clicked"></Button>
+    </Grid>
+
 </ContentPage>

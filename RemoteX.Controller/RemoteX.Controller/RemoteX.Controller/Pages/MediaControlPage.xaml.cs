@@ -33,5 +33,14 @@ namespace RemoteX.Controller
             App.ControllerService.SendKeyboardControl(BitConverter.GetBytes((int)VirtualKeyCode.MEDIA_NEXT_TRACK));
         }
 
+        private void VolumnUpButton_Clicked(object sender, EventArgs e)
+        {
+            App.ControllerService.SendKeyboardControl(BitConverter.GetBytes((int)VirtualKeyCode.VOLUME_UP));
+        }
+
+        private void VolumnDownButton_Clicked(object sender, EventArgs e)
+        {
+            App.ControllerService.SendKeyboardControl(BitConverter.GetBytes((int)VirtualKeyCode.VOLUME_DOWN));
+        }
     }
 }
