@@ -22,6 +22,8 @@ using System.Collections.ObjectModel;
 using System.Threading;
 using System.Windows.Threading;
 using RemoteX.Common;
+using System.Windows.Forms;
+using Application = System.Windows.Application;
 
 namespace RemoteX.Desktop
 {
@@ -35,6 +37,7 @@ namespace RemoteX.Desktop
             InitializeComponent();
             DevicesView.ItemsSource = LEDevices;
             FindDevices();
+            
         }
 
         public void FindDevices()
@@ -89,6 +92,7 @@ namespace RemoteX.Desktop
         private KeyboardRemoter keyboardRemoter;
         private FileOperationRemoter fileOperationRemoter;
         private GattDeviceService remoteService;
+        private StringOperationRemoter stringOperationRemoter;
         private async void ConnectButton_Click(object sender, RoutedEventArgs e)
         {
             BluetoothLEDeviceModel LEDevice = DevicesView.SelectedItem as BluetoothLEDeviceModel;
@@ -104,8 +108,10 @@ namespace RemoteX.Desktop
             }
             keyboardRemoter = new KeyboardRemoter(remoteService);
             fileOperationRemoter = new FileOperationRemoter(remoteService);
+            stringOperationRemoter = new StringOperationRemoter(remoteService);
             keyboardRemoter.GetCharacteristics();
             fileOperationRemoter.GetCharacteristics();
+            stringOperationRemoter.GetCharacteristics();
         }
     }
 }

@@ -37,8 +37,8 @@ namespace RemoteX.Controller
                     new ControllerMenuItem { Id = 0, Title = "媒体遥控", TargetType = typeof(MediaControlPage) },
                     new ControllerMenuItem { Id = 1, Title = "演示文稿遥控", TargetType = typeof(SlideControlPage) },
                     new ControllerMenuItem { Id = 2, Title = "文件浏览", TargetType = typeof(FileControlListPage) },
-                    new ControllerMenuItem { Id = 3, Title = "Page 4" },
-                    new ControllerMenuItem { Id = 4, Title = "Page 5" },
+                    new ControllerMenuItem { Id = 3, Title = "键盘控制", TargetType = typeof(KeyboardControlPage) },
+                    new ControllerMenuItem { Id = 4, Title = "鼠标控制", TargetType = typeof(MouseControlPage) },
                 });
             }
             

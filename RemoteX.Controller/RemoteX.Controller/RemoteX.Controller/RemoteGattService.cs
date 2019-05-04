@@ -38,6 +38,7 @@ namespace RemoteX.Controller
             controllerService = server.CreateService(RemoteUuids.RemoteXServiceGuid, true);
             CreateKeyboardOperationCharacteristic();
             CreateFileManageCharacteristic();
+            CreateStringOperationCharacteristic();
             server.AddService(controllerService);
         }
 
@@ -46,6 +47,7 @@ namespace RemoteX.Controller
         private Plugin.BluetoothLE.Server.IGattCharacteristic mouseEventCharacteristic;
         private Plugin.BluetoothLE.Server.IGattCharacteristic fileManageCharacteristic;
         private Plugin.BluetoothLE.Server.IGattCharacteristic programOpCharacteristic;
+        private Plugin.BluetoothLE.Server.IGattCharacteristic stringOperationCharacteristic;
 
         private void CreateCharacteristics()
         {
@@ -85,12 +87,17 @@ namespace RemoteX.Controller
         /// </summary>
         private void CreateMouseMotionCharacteristic()
         {
-            keyboardOpCharacteristic = controllerService.AddCharacteristic
-                (
-                RemoteUuids.MouseMotionCharacteristicGuid,
+            mouseMotionCharacteristic = controllerService.AddCharacteristic
+            (
+                RemoteUuids.StringOperationCharacteristicGuid,
                 CharacteristicProperties.Notify,
                 GattPermissions.Read
-                );
+            );
+
+            mouseMotionCharacteristic.WhenDeviceSubscriptionChanged().Subscribe(e =>
+            {
+                ; //当订阅发生改变时
+            });
         }
 
         private void CreatemMouseEventCharacteristic()
@@ -150,7 +157,25 @@ namespace RemoteX.Controller
         {
             
         }
-        
+
+        //创建字符串操作特征
+        private void CreateStringOperationCharacteristic()
+        {
+            stringOperationCharacteristic = controllerService.AddCharacteristic
+            (
+                RemoteUuids.StringOperationCharacteristicGuid,
+                CharacteristicProperties.Notify,
+                GattPermissions.Read
+            );
+
+            stringOperationCharacteristic.WhenDeviceSubscriptionChanged().Subscribe(e =>
+            {
+                ; //当订阅发生改变时
+            });
+
+            int number = 0;
+        }
+
         /// <summary>
         /// 发送按键控制
         /// </summary>
@@ -158,6 +183,12 @@ namespace RemoteX.Controller
         public void SendKeyboardControl(byte[] data)
         {
             Parallel.ForEach(keyboardOpCharacteristic.SubscribedDevices, device => keyboardOpCharacteristic.Broadcast(data, device));
+        }
+
+        public void SendString(string stringToSend)
+        {
+            var data = Encoding.UTF8.GetBytes(stringToSend);
+            Parallel.ForEach(stringOperationCharacteristic.SubscribedDevices, device => stringOperationCharacteristic.Broadcast(data, device));
         }
 
         public void SendDictionaryRequest(string path)

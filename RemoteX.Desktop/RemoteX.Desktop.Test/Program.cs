@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using WindowsInput;
 
 namespace RemoteX.Desktop.Test
 {
@@ -13,12 +14,13 @@ namespace RemoteX.Desktop.Test
         {
             var files = System.IO.Directory.EnumerateFileSystemEntries("D:/");
             
-            foreach(var file in files)
+            while(true)
             {
-                Console.WriteLine(file);
-                var bytes = Encoding.UTF8.GetBytes(file);
+                InputSimulator inputSimulator = new InputSimulator();
+                MouseSimulator keyboardSimulator = new MouseSimulator(inputSimulator);
+                keyboardSimulator.MoveMouseBy(1, 1);
             }
-            System.Diagnostics.Process.Start(@"D:/Users/redal/Pictures\0.jpg");
+            //System.Diagnostics.Process.Start(@"D:/Users/redal/Pictures\0.jpg");
         }
     }
 }

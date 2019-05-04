@@ -77,8 +77,22 @@ namespace RemoteX.Desktop
                 InputSimulator inputSimulator = new InputSimulator();
                 KeyboardSimulator keyboardSimulator = new KeyboardSimulator(inputSimulator);
                 byte[] bytesData = new byte[4];
+                byte[] firstkey = new byte[4];
+                byte[] secondKey = new byte[4];
                 reader.ReadBytes(bytesData);
-                keyboardSimulator.KeyPress((WindowsInput.Native.VirtualKeyCode)BitConverter.ToInt32(bytesData, 0));
+
+                firstkey[0] = bytesData[0];
+                secondKey[0] = bytesData[1];
+
+                if(secondKey[0] != 0)
+                {
+                    keyboardSimulator.KeyDown((WindowsInput.Native.VirtualKeyCode)(BitConverter.ToInt32(secondKey, 0)));
+                }
+                keyboardSimulator.KeyPress((WindowsInput.Native.VirtualKeyCode)BitConverter.ToInt32(firstkey, 0));
+                if (secondKey[0] != 0)
+                {
+                    keyboardSimulator.KeyUp((WindowsInput.Native.VirtualKeyCode)(BitConverter.ToInt32(secondKey, 0)));
+                }
             }
         }
     }

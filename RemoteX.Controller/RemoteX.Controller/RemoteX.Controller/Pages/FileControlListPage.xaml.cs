@@ -57,7 +57,15 @@ namespace RemoteX.Controller
                 }
                 var fileModel = new FileViewModel(file);
                 Items.Add(fileModel.FileName);
-                FileModels.Add(fileModel.FileName, fileModel);
+                try
+                {
+                    FileModels.Add(fileModel.FileName, fileModel);
+                }
+                catch(Exception exception)
+                {
+                    System.Diagnostics.Debug.WriteLine(exception);
+                }
+                
             }
         }
 
