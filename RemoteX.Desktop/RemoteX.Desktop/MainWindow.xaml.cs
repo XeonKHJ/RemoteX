@@ -93,6 +93,7 @@ namespace RemoteX.Desktop
         private FileOperationRemoter fileOperationRemoter;
         private GattDeviceService remoteService;
         private StringOperationRemoter stringOperationRemoter;
+        private MouseRemoter mouseRemoter;
         private async void ConnectButton_Click(object sender, RoutedEventArgs e)
         {
             BluetoothLEDeviceModel LEDevice = DevicesView.SelectedItem as BluetoothLEDeviceModel;
@@ -109,9 +110,11 @@ namespace RemoteX.Desktop
             keyboardRemoter = new KeyboardRemoter(remoteService);
             fileOperationRemoter = new FileOperationRemoter(remoteService);
             stringOperationRemoter = new StringOperationRemoter(remoteService);
+            mouseRemoter = new MouseRemoter(remoteService);
             keyboardRemoter.GetCharacteristics();
             fileOperationRemoter.GetCharacteristics();
             stringOperationRemoter.GetCharacteristics();
+            mouseRemoter.GetCharacteristics();
         }
     }
 }

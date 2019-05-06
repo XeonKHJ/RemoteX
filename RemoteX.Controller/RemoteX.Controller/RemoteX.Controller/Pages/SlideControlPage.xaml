@@ -4,10 +4,38 @@
              x:Class="RemoteX.Controller.SlideControlPage"
              Title="幻灯片遥控">
     <ContentPage.Content>
-        <StackLayout>
-            <Button x:Name="pageUpButton" Text="上一页" Clicked="PageUpButton_Clicked"></Button>
-            <Button x:Name="showSlidesButton" Text="演示" Clicked="ShowSlidesButton_Clicked"></Button>
-            <Button x:Name="pageDownButton" Text="下一页" Clicked="PageDownButton_Clicked"></Button>
-        </StackLayout>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="pageUpButton" Grid.Column="1" Text="上一页" Clicked="PageUpButton_Clicked"></Button>
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="endSliderButton" Grid.Column="0" Text="退出" Clicked="EndSliderButton_Clicked"></Button>
+                <Button x:Name="showSlidesButton" Grid.Column="1" Text="演示" Clicked="ShowSlidesButton_Clicked"></Button>
+            </Grid>
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="pageDownButton" Grid.Column="1" Text="下一页" Clicked="PageDownButton_Clicked"></Button>
+                <!--<Button x:Name="cursorButton" Grid.Column="2" Text="激光笔" Clicked="CursorButton_Clicked"></Button>-->
+            </Grid>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

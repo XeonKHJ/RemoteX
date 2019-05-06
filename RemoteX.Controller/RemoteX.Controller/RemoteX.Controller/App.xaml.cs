@@ -1,4 +1,6 @@
-﻿using System;
+﻿using RemoteX.Common;
+using RemoteX.Controller.Pages;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -14,10 +16,16 @@ namespace RemoteX.Controller
             ControllerService = new RemoteGattService();
             ControllerService.PublishService();
             App.ControllerService.OnFileManageWriteCompleted += FileControlListPage.ControllerService_OnFileManageWriteCompleted;
+            App.ControllerService.OnReadReceived += ControllerService_OnReadReceived;
             MainPage = new MainMasterDetailPage();
         }
 
-        
+        private Common.CursorPoint ControllerService_OnReadReceived()
+        {
+            System.Diagnostics.Debug.WriteLine(MouseControlPage.CursorPoint.X.ToString() + ", " + MouseControlPage.CursorPoint.Y.ToString());
+            return MouseControlPage.CursorPoint;
+        }
+
         protected override void OnStart()
         {
 

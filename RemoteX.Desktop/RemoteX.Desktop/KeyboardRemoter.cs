@@ -19,9 +19,12 @@ namespace RemoteX.Desktop
 
 
         private GattCharacteristic keyboardControlCharacteristic;
-
+        static private InputSimulator inputSimulator;
+        static private KeyboardSimulator keyboardSimulator;
         public KeyboardRemoter(GattDeviceService remoteService) : base(remoteService)
         {
+            inputSimulator = new InputSimulator();
+            keyboardSimulator = new KeyboardSimulator(inputSimulator);
         }
 
         /// <summary>
@@ -74,8 +77,6 @@ namespace RemoteX.Desktop
         {
             using (var reader = DataReader.FromBuffer(args.CharacteristicValue))
             {
-                InputSimulator inputSimulator = new InputSimulator();
-                KeyboardSimulator keyboardSimulator = new KeyboardSimulator(inputSimulator);
                 byte[] bytesData = new byte[4];
                 byte[] firstkey = new byte[4];
                 byte[] secondKey = new byte[4];

@@ -13,13 +13,12 @@ namespace RemoteX.Desktop.Test
         static void Main(string[] args)
         {
             var files = System.IO.Directory.EnumerateFileSystemEntries("D:/");
-            
-            while(true)
-            {
-                InputSimulator inputSimulator = new InputSimulator();
-                MouseSimulator keyboardSimulator = new MouseSimulator(inputSimulator);
-                keyboardSimulator.MoveMouseBy(1, 1);
-            }
+            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+            InputSimulator inputSimulator = new InputSimulator();
+            KeyboardSimulator keyboardSimulator = new KeyboardSimulator(inputSimulator);
+            double x = 0;
+            double y = 0;
+                keyboardSimulator.KeyPress(WindowsInput.Native.VirtualKeyCode.MODECHANGE);
             //System.Diagnostics.Process.Start(@"D:/Users/redal/Pictures\0.jpg");
         }
     }

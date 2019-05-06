@@ -26,7 +26,6 @@ namespace RemoteX.Desktop
                         aqsAllBluetoothLEDevices,
                         requestedProperties,
                         DeviceInformationKind.AssociationEndpoint);
-
             deviceWatcher.Added += DeviceWatcher_Added;
             deviceWatcher.Updated += DeviceWatcher_Updated;
             deviceWatcher.Stopped += DeviceWatcher_Stopped;

@@ -3,10 +3,41 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="RemoteX.Controller.Pages.MouseControlPage">
     <ContentPage.Content>
-        <Grid x:Name="touchpadGrid" >
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="7*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="7*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" x:Name="touchpadGrid" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                    <Label Text="鼠标移动区域"
+                        VerticalOptions="CenterAndExpand" 
+                        HorizontalOptions="CenterAndExpand" />
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer x:Name="touchpadTapGestureRecongnizer" Tapped="TouchpadTapGestureRecongnizer_Tapped"></TapGestureRecognizer>
+                        <PanGestureRecognizer x:Name="touchpadPanGestureRecongnizer" PanUpdated="TouchpadPanGestureRecongnizer_PanUpdated"></PanGestureRecognizer>
+                        <PinchGestureRecognizer x:Name="touchpadPinchGestureReconizer" PinchUpdated="TouchpadPinchGestureReconizer_PinchUpdated"></PinchGestureRecognizer>
+                    </Grid.GestureRecognizers>
+                </Grid>
+                <Grid Grid.Column="1" x:Name="verticalScrollerGrid" BackgroundColor="Gray" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Focused="VerticalScrollerGrid_Focused" Unfocused="VerticalScrollerGrid_Unfocused">
+                    <Grid.GestureRecognizers>
+                        <PanGestureRecognizer x:Name="verticalScrollerPanGestureRecongnizer" PanUpdated="VerticalScrollerPanGestureRecongnizer_PanUpdated"></PanGestureRecognizer>
+                        <TapGestureRecognizer x:Name="verticalScrollerTapGestureRecongnizer" Tapped="VerticalScrollerTapGestureRecongnizer_Tapped"></TapGestureRecognizer>
+                        <PinchGestureRecognizer x:Name="verticalScrollerPinchGestureReconizer" PinchUpdated="VerticalScrollerPinchGestureReconizer_PinchUpdated"></PinchGestureRecognizer>
+                    </Grid.GestureRecognizers>
+                </Grid>
+            </Grid>
+            <Grid Grid.Row="1" x:Name="horizontalScrollerGrid" BackgroundColor="AliceBlue" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                <Grid.GestureRecognizers>
+                    <PanGestureRecognizer x:Name="horizontalScrollerPanGestureRecongnizer" PanUpdated="HorizontalScrollerPanGestureRecongnizer_PanUpdated"></PanGestureRecognizer>
+                    <TapGestureRecognizer x:Name="horizontalScrollerTapGestureRecongnizer" Tapped="HorizontalScrollerTapGestureRecongnizer_Tapped"></TapGestureRecognizer>
+                    <PinchGestureRecognizer x:Name="horizontalScrollerPinchGestureReconizer" PinchUpdated="HorizontalScrollerPinchGestureReconizer_PinchUpdated"></PinchGestureRecognizer>
+                </Grid.GestureRecognizers>
+            </Grid>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

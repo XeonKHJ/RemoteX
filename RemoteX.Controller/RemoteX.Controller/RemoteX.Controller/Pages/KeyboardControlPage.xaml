@@ -45,7 +45,7 @@
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Button x:Name="enterTextButton" Grid.Column="1" Text="输入文字" Clicked="EnterTextButton_Clicked"></Button>
-                <Entry x:Name="enterEntry" IsVisible="False" Keyboard="Url" Grid.Column="1"
+                <Entry x:Name="enterEntry" IsVisible="False" Keyboard="Plain" Grid.Column="1"
                        Focused="EnterEntry_Focused" TextChanged="EnterEntry_TextChanged" Unfocused="EnterEntry_Unfocused"></Entry>
                 <Button x:Name="startMenuButton" Grid.Column="0" Text="开始" Clicked="StartMenuButton_Clicked"></Button>
                 <Button x:Name="switchButton" Grid.Column="2" Text="切换" Clicked="SwitchButton_Clicked"></Button>

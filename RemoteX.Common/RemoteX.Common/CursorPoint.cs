@@ -7,9 +7,9 @@ namespace RemoteX.Common
 {
     public struct CursorPoint
     {
-        public int X { set; get; }
-        public int Y { set; get; }
-        CursorPoint(int _x, int _y)
+        public double X { set; get; }
+        public double Y { set; get; }
+        public CursorPoint(int _x, int _y)
         {
             X = _x;
             Y = _y;

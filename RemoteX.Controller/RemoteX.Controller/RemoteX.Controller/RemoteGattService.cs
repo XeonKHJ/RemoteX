@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Plugin.BluetoothLE;
 using Plugin.BluetoothLE.Server;
 using RemoteX.Common;
+using RemoteX.Controller.Pages;
+using static RemoteX.Common.RemoteCommand;
 
 namespace RemoteX.Controller
 {
@@ -36,9 +38,15 @@ namespace RemoteX.Controller
         {
             var server = await CrossBleAdapter.Current.CreateGattServer();
             controllerService = server.CreateService(RemoteUuids.RemoteXServiceGuid, true);
+
+            //创建特征
             CreateKeyboardOperationCharacteristic();
             CreateFileManageCharacteristic();
             CreateStringOperationCharacteristic();
+            CreateMouseMotionCharacteristic();
+            CreateMouseEventCharacteristic();
+
+            //添加服务
             server.AddService(controllerService);
         }
 
@@ -82,6 +90,7 @@ namespace RemoteX.Controller
             });
         }
 
+        CursorPoint cursorPoint = new CursorPoint { X = 0, Y = 0 };
         /// <summary>
         /// 创建鼠标移动特征
         /// </summary>
@@ -89,8 +98,8 @@ namespace RemoteX.Controller
         {
             mouseMotionCharacteristic = controllerService.AddCharacteristic
             (
-                RemoteUuids.StringOperationCharacteristicGuid,
-                CharacteristicProperties.Notify,
+                RemoteUuids.MouseMotionCharacteristicGuid,
+                CharacteristicProperties.Notify | CharacteristicProperties.Read,
                 GattPermissions.Read
             );
 
@@ -98,11 +107,45 @@ namespace RemoteX.Controller
             {
                 ; //当订阅发生改变时
             });
+
+            mouseMotionCharacteristic.WhenReadReceived().Subscribe(x =>
+            {
+                if(OnReadReceived != null)
+                {
+                    cursorPoint = OnReadReceived();
+                }
+                byte[] posDataBytes = new byte[2 * sizeof(double)];
+                var xBytes = BitConverter.GetBytes(cursorPoint.X);
+                var yBytes = BitConverter.GetBytes(cursorPoint.Y);
+                System.Diagnostics.Debug.WriteLine(cursorPoint.X.ToString() + ", " + cursorPoint.Y.ToString());
+                xBytes.CopyTo(posDataBytes, 0);
+                yBytes.CopyTo(posDataBytes, sizeof(double));
+                x.Value = posDataBytes;
+
+                x.Status = GattStatus.Success;
+            });
+        }
+        public delegate CursorPoint OnReadReceivedHandler();
+        public event OnReadReceivedHandler OnReadReceived;
+
+        private void CreateMouseEventCharacteristic()
+        {
+            mouseEventCharacteristic = controllerService.AddCharacteristic
+            (
+                RemoteUuids.MouseEventCharacteristicGuid,
+                CharacteristicProperties.Notify,
+                GattPermissions.Read
+            );
+
+            mouseEventCharacteristic.WhenDeviceSubscriptionChanged().Subscribe(e =>
+            {
+                ; //当订阅发生改变时
+            });
         }
 
         private void CreatemMouseEventCharacteristic()
         {
-            
+
         }
 
         /// <summary>
@@ -136,9 +179,9 @@ namespace RemoteX.Controller
                 List<string> items = new List<string>();
                 int stringBeginIndex = 0;
                 int stringEndIndex = 0;
-                for(int i = 0; i< x.Value.Length; ++i)
+                for (int i = 0; i < x.Value.Length; ++i)
                 {
-                    if(x.Value[i] == 0)
+                    if (x.Value[i] == 0)
                     {
                         stringEndIndex = i;
                         byte[] path = new byte[stringEndIndex - stringBeginIndex];
@@ -155,7 +198,7 @@ namespace RemoteX.Controller
         internal event OnWriteCompleteEventHandler OnFileManageWriteCompleted;
         private void CreateProgramOperatioCharacteristic()
         {
-            
+
         }
 
         //创建字符串操作特征
@@ -185,16 +228,56 @@ namespace RemoteX.Controller
             Parallel.ForEach(keyboardOpCharacteristic.SubscribedDevices, device => keyboardOpCharacteristic.Broadcast(data, device));
         }
 
+        /// <summary>
+        /// 发送键盘输入的字符串
+        /// </summary>
+        /// <param name="stringToSend"></param>
         public void SendString(string stringToSend)
         {
             var data = Encoding.UTF8.GetBytes(stringToSend);
             Parallel.ForEach(stringOperationCharacteristic.SubscribedDevices, device => stringOperationCharacteristic.Broadcast(data, device));
         }
 
+        /// <summary>
+        /// 发送目录请求
+        /// </summary>
+        /// <param name="path"></param>
         public void SendDictionaryRequest(string path)
         {
             var pathBytes = Encoding.UTF8.GetBytes(path);
-            Parallel.ForEach(keyboardOpCharacteristic.SubscribedDevices, device => fileManageCharacteristic.Broadcast(pathBytes, device));
+            Parallel.ForEach(fileManageCharacteristic.SubscribedDevices, device => fileManageCharacteristic.Broadcast(pathBytes, device));
+        }
+
+        public void SendMousePostion(CursorPoint cursorPoint)
+        {
+            byte[] posDataBytes = new byte[2 * sizeof(double)];
+            var xBytes = BitConverter.GetBytes(cursorPoint.X);
+            var yBytes = BitConverter.GetBytes(cursorPoint.Y);
+            xBytes.CopyTo(posDataBytes, 0);
+            yBytes.CopyTo(posDataBytes, sizeof(double));
+            try
+            {
+                Parallel.ForEach(mouseMotionCharacteristic.SubscribedDevices, device => mouseMotionCharacteristic.Broadcast(posDataBytes, device));
+            }
+            catch
+            {
+                ;
+            }
+        }
+        
+        /// <summary>
+        /// 发送鼠标事件
+        /// </summary>
+        /// <param name="mouseEvent"></param>
+        /// <param name="scrollInfo"></param>
+        public void SendMouseEvent(MouseEvent mouseEvent, int scrollInfo)
+        {
+            byte[] bytesToSend = new byte[2 * sizeof(int)];
+            var mouseEventBytes = BitConverter.GetBytes((int)mouseEvent);
+            var scrollInfoBytes = BitConverter.GetBytes(scrollInfo);
+            mouseEventBytes.CopyTo(bytesToSend, 0);
+            scrollInfoBytes.CopyTo(bytesToSend, sizeof(int));
+            Parallel.ForEach(mouseEventCharacteristic.SubscribedDevices, device => mouseEventCharacteristic.Broadcast(bytesToSend, device));
         }
     }
 }

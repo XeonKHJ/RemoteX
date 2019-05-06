@@ -14,5 +14,7 @@ namespace RemoteX.Common
         public Point CursorPosition { set; get; }
 
         public VirtualKeyCode VirtualKeyCode { set; get; }
+
+        public enum MouseEvent { LeftClick, RightClick, LeftDown, RightDown, LeftUp, RightUp, HorizontalScroll, VerticalScroll };
     }
 }
